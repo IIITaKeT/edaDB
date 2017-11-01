@@ -19,7 +19,7 @@ def ProdAdd(goods_view_box, prod_cat):
         prod_name = prod.find('div', class_='goods_view_box-caption').get_text()
         prod_price = prod.find('div', class_='goods_price-item current').get_text()
         products.append([prod_cat, prod_name, prod_price])
-    print("Текущая категория - {}, Прогресс - {}%".format(prod_cat, round(len(products)/45000,0)))
+    print("РўРµРєСѓС‰Р°СЏ РєР°С‚РµРіРѕСЂРёСЏ - {}, РџСЂРѕРіСЂРµСЃСЃ - {}%".format(prod_cat, round(len(products)/45000,0)))
 
 category, products = [], []
 
