@@ -1,3 +1,4 @@
+# -*- coding: cp1251 -*-
 from bs4 import BeautifulSoup
 from time import time
 import requests
@@ -18,10 +19,9 @@ def ProdAdd(goods_view_box, prod_cat):
         prod_name = prod.find('div', class_='goods_view_box-caption').get_text()
         prod_price = prod.find('div', class_='goods_price-item current').get_text()
         products.append([prod_cat, prod_name, prod_price])
-products = []
-category, list_count = [], []
-min_work, x = 0.0, 0
-# max_time = 0.0
+    print("Текущая категория - {}, Прогресс - {}%".format(prod_cat, round(len(products)/45000,0)))
+
+category, products = [], []
 
 url = "https://www.utkonos.ru/cat"
 page = requests.get(url)
@@ -39,3 +39,8 @@ for ref, name in category:
         page = requests.get(link)
         soup = BeautifulSoup(page.text, 'html.parser')
         ProdAdd(soup.find_all('div', class_='goods_pos_bottom'), name)
+
+with open('products.txt', 'w') as file:
+    for b in products:
+        file.write("{w[0]}, {w[1]}, {w[2]}".format(w = b))
+    file.close()
