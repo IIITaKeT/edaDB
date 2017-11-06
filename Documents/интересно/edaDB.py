@@ -19,7 +19,7 @@ def ProdAdd(goods_view_box, prod_cat):
         prod_name = prod.find('div', class_='goods_view_box-caption').get_text()
         prod_price = prod.find('div', class_='goods_price-item current').get_text()
         products.append([prod_cat, prod_name, prod_price])
-    print("Текущая категория - {}, Прогресс - {}%".format(prod_cat, round(len(products)/460,1)))
+    print("Текущая категория - {}, Прогресс - {}%".format(prod_cat, round(len(products)/470,1)))
 
 category, products = [], []
 req_head = {"user-agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36"}
@@ -41,7 +41,7 @@ for ref, name in category:
         soup = BeautifulSoup(page.text, 'html.parser')
         ProdAdd(soup.find_all('div', class_='goods_pos_bottom'), name)
 
-with open('products.txt', 'w') as file:
+with open('utka_products.txt', 'w') as file:
     for b in products:
-        file.write("{w[0]}, {w[1]}, {w[2]}\n".format(w = b))
+        file.write("{w[0]}\t{w[1]}\t{w[2]}\n".format(w = b))
     file.close()
