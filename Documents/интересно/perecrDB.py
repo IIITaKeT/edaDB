@@ -17,7 +17,10 @@ def ProdAdd(goods_view_box, prod_cat):
     global products
     for prod in goods_view_box:
         prod_name = " ".join(re.findall("\w+", prod.find("div", class_='xf-product__title xf-product-title').get_text()))
-        prod_price = re.findall("\w+",prod.find('div', class_='xf-price').get_text())
+        try:
+            prod_price = re.findall("\w+",prod.find('div', class_='xf-price').get_text())
+        except AttributeError:
+            prod_price = [0,0]
         products.append([prod_cat, prod_name, float('{pr[0]}.{pr[1]}'.format(pr = prod_price))])
     print("Текущая категория - {}, Количество товаров - {}".format(prod_cat, len(products)))
 
@@ -34,12 +37,14 @@ for cat in soup.find_all('a', class_='xf-catalog-categories__link'):
 for ref, name in category:
     fts_page = requests.get(ref, headers = req_head)
     meta_soup = BeautifulSoup(fts_page.text, 'html.parser')
-    ProdAdd(meta_soup.find_all('div', class_='xf-product js-product '), re.sub('\n', '', name))
+    need_soup = meta_soup.find('div', class_="catalog__items-wrap js-catalog-wrap")
+    ProdAdd(need_soup.find_all('div', class_='xf-product js-product '), re.sub('\n', '', name))
     for page_num in range(2, int(PageCount(meta_soup))):
         link = "{}?page={}".format(ref, page_num)
         page = requests.get(link, headers = req_head)
         soup = BeautifulSoup(page.text, 'html.parser')
-        ProdAdd(soup.find_all('div', class_='xf-product js-product '), re.sub('\n', '', name))
+        trg_soup = soup.find('div', class_="catalog__items-wrap js-catalog-wrap")
+        ProdAdd(trg_soup.find_all('div', class_='xf-product js-product '), re.sub('\n', '', name))
 
 with open('prc_products.txt', 'w') as file:
     for b in products:
